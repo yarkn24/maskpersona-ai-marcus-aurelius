@@ -59,6 +59,11 @@ def main(argv: list[str] | None = None) -> int:
     tracer = get_tracer(cfg)
     recs = run_eval(cfg, _dry_answer, _dry_judge, n=args.n, tracer=tracer)
     print(f"eval: {len(recs)} questions, traced via {tracer.backend}")
+    print("NOTE: this CLI path never calls a real model. Every score above is a heuristic on the "
+          "literal placeholder answer text, NOT a quality signal on the persona. See README.md's "
+          "Evaluation section (\"Gaps in the shipped eval code\") before treating a low score here "
+          "as a persona defect; wire a real answer_fn/judge_fn per this module's docstring, or run "
+          "the assessment inside a Claude Code session dispatching the real persona agent instead.")
     return 0
 
 

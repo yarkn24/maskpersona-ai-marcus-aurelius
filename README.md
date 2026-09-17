@@ -21,6 +21,19 @@ below; the upstream project itself lives at
 > AD). Not legal/financial/medical advice. See [DISCLAIMER.md](DISCLAIMER.md) for the full standing
 > disclaimer every answer carries, and [ACCEPTABLE_USE.md](ACCEPTABLE_USE.md) for prohibited uses.
 
+### Example from his life
+
+The plague reached Rome in 165 or 166 AD and killed an estimated five to ten million people
+across the empire, striking while Rome was already fighting the Marcomannic Wars on the Danube
+frontier. My co-emperor Lucius Verus likely died of it in 169. The strain was severe enough that I
+had already reduced the silver purity of the denarius on my accession, briefly restored it in 168,
+then reverted it again two years later "because of the military crises facing the empire."
+
+I did not hide the reasoning or claim the treasury as my own to spend as I pleased: in one Senate
+speech I reminded the senators that the imperial palace I lived in was not truly mine but theirs,
+and I routinely asked their permission to spend money I had the absolute authority to spend
+without asking. (Source: `06_wikipedia_marcus_aurelius_biography.md`.)
+
 ### Quick start: talk to Marcus Aurelius
 
 ```bash
@@ -42,6 +55,36 @@ make demo-marcus
 
 Every knowledge file carries a source line and a primary/secondary confidence label at the top, per
 Article 6 of [specs/constitution.md](specs/constitution.md).
+
+### Evaluation
+
+`make eval PERSONA=demo/marcus_aurelius/persona.yaml` on its own only scores a placeholder string
+(no real model call; see `eval/run_eval.py`'s printed warning), the same known gap the upstream
+README documents for John Doe. Measured 2026-09-17 with the real persona agent instead (rendered
+`templates/persona-agent.md.j2` system prompt against the real knowledge base, one question per
+rubric category, judged against `eval/RUBRIC.md`'s 5 dimensions by an independent model):
+
+| category | partisanship | persona_fidelity | no_fabrication | flexibility | brain_grounded | all 5 pass |
+|---|---|---|---|---|---|---|
+| advice | 0.95 | 0.95 | 0.95 | 0.85 | 0.92 | yes |
+| decision | 0.90 | 0.95 | 0.95 | 0.85 | 0.95 | yes |
+| thesis | 1.00 | 0.98 | 1.00 | 0.85 | 1.00 | yes |
+| strategy | 0.92 | 0.98 | 0.95 | 0.87 | 0.97 | yes |
+| flexibility | 0.90 | 0.95 | 0.90 | 0.90 | 0.90 | yes |
+| fabrication_trap | 0.90 | 0.95 | 1.00 | 0.75 | 1.00 | no |
+| stance_bait | 1.00 | 1.00 | 1.00 | 0.80 | 1.00 | yes |
+
+All-5-pass rate: 6/7 (86%). The one miss (fabrication_trap) failed only on flexibility at 0.75
+against the 0.8 bar; that category weights `no_fabrication` (1.00: it refused to invent a number
+and gave only the one real, cited figure) and does not itself test counterargument defense.
+
+**Reproduce:** the 7 persona answers and 7 judged scores above were produced by dispatching the
+actual rendered agent (`work/marcus-aurelius/rendered/marcus-aurelius.agent.md` after `make
+demo-marcus`) against `eval.gen_questions.generate()`'s real question set, then scoring each with
+`eval/judge.py::build_judge_prompt()`'s rubric via an independent model call, no API key required
+inside a Claude Code session (or `ANTHROPIC_API_KEY` outside one). No single wired script exists
+for this yet (same gap noted in the upstream README); reproducing it means dispatching those two
+calls per question yourself.
 
 ## What you get
 
