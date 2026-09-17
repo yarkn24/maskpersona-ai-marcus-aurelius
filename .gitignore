@@ -15,10 +15,13 @@ checkpoints.db
 
 # ── persona content is NEVER committed (GDPR / copyright) ─
 # knowledge_src is created at runtime under work/<slug>/.
-# The ONLY knowledge files in the repo are the fictional demo:
+# The ONLY knowledge files in the repo are the fictional demo and the Article 1
+# public-domain historical-figure exception (specs/constitution.md):
 knowledge_src/
 !demo/john_doe/knowledge_src/
 !demo/john_doe/knowledge_src/**
+!demo/marcus_aurelius/knowledge_src/
+!demo/marcus_aurelius/knowledge_src/**
 
 # brains live outside the repo entirely
 *personaforge_brains*

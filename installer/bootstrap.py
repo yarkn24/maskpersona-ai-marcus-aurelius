@@ -165,13 +165,13 @@ def _ask_persona_name() -> str | None:
     return f"{name} ({clarify})"
 
 
-def run_demo() -> dict:
+def run_demo(demo_slug: str = "john_doe") -> dict:
     pf = steps.step_00_preflight()
     if not pf["ok"]:
         print("preflight failed: need Python >= 3.11")
         return {"ok": False}
-    demo = steps.step_60_demo()
-    print("MaskPersona AI demo (offline, fictional John Doe):")
+    demo = steps.step_60_demo(demo_slug=demo_slug)
+    print(f"MaskPersona AI demo (offline): {demo['persona_name']}")
     print(f"  brain backend : {demo['backend']}")
     print(f"  knowledge mined: {demo['mined']} chunks")
     print(f"  rendered to    : {demo['rendered']}")
@@ -196,7 +196,10 @@ def run_full() -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="maskpersona-ai")
-    ap.add_argument("--demo", action="store_true", help="stand up the fictional demo offline")
+    ap.add_argument("--demo", action="store_true", help="stand up a bundled demo persona offline")
+    ap.add_argument("--demo-name", default="john_doe",
+                    help="which bundled demo/<slug>/ persona to stand up with --demo "
+                         "(default: john_doe; this edition also ships marcus_aurelius)")
     ap.add_argument("--onboard", action="store_true",
                     help="start onboarding a new persona (currently an alias for the default "
                          "path: run_full() always asks for a persona name and points to the "
@@ -213,7 +216,7 @@ def main(argv: list[str] | None = None) -> int:
     if not _check_acceptance():
         return 1
     if args.demo:
-        out = run_demo()
+        out = run_demo(demo_slug=args.demo_name)
         return 0 if out.get("ok") else 1
     run_full()
     return 0

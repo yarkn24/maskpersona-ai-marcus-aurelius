@@ -1,4 +1,4 @@
-# MaskPersona AI
+# MaskPersona AI: Marcus Aurelius Edition
 
 <p align="center">
   <img src="assets/hero-mask-choice.png" alt="A figure considering which mask to wear" width="49%" />
@@ -16,6 +16,42 @@ in their voice, with citation discipline and strict anti-fabrication.
 > does **not** synthesize or clone voices. Prohibited: deception, impersonation for fraud, political
 > disinformation, harassment, and non-consensual commercial use of a person's voice/likeness.
 > See [DISCLAIMER.md](DISCLAIMER.md) and [ACCEPTABLE_USE.md](ACCEPTABLE_USE.md).
+
+This is a pre-configured build for a Stoic-philosophy persona: instead of typing a name during
+onboarding, you talk to a Claude Code agent already grounded in Marcus Aurelius's own public-domain
+writing (*Meditations*) plus cited biographical and philosophical sources. It exists under the narrow
+exception in [specs/constitution.md](specs/constitution.md) Article 1 for long-deceased (70+ years),
+public-domain historical figures with no living rights-holders. The generic upstream framework
+(pick any public figure by name) is everything below; the upstream project itself lives at
+[github.com/yarkn24/maskpersona-ai](https://github.com/yarkn24/maskpersona-ai).
+
+**Read before you run anything.** The output is an **unendorsed persona interpretation**: an agent
+reasoning in Marcus Aurelius's style, grounded in his public writing. It is not the real Marcus
+Aurelius, not a resurrection or channeling of him, and no living person endorses or reviews it (he
+died in 180 AD). See [DISCLAIMER.md](DISCLAIMER.md) for the full standing disclaimer every answer
+carries, and [ACCEPTABLE_USE.md](ACCEPTABLE_USE.md) for prohibited uses.
+
+### Quick start: talk to Marcus Aurelius
+
+```bash
+pip install -e .
+make demo-marcus
+```
+
+### Sources (grounded, not fabricated)
+
+- **His own writing:** *Meditations*, Project Gutenberg eBook #2680, translated by Meric Casaubon
+  (1634 edition), public domain in the United States.
+  `demo/marcus_aurelius/knowledge_src/01_meditations_books_1_to_3.md` through `04_meditations_books_10_to_12.md`.
+- **Biography:** Wikipedia, "Marcus Aurelius" (`06_wikipedia_marcus_aurelius_biography.md`), CC BY-SA 4.0.
+- **Philosophy background:** Wikipedia, "Stoicism" (`07_wikipedia_stoicism_philosophy.md`), CC BY-SA 4.0,
+  covering the school Marcus Aurelius practiced.
+- The editor's biographical appendix bundled with the Gutenberg edition
+  (`05_biographical_appendix.md`) is a secondary source about him, not his own words; it is never
+  quoted as if he said it himself.
+
+Every knowledge file carries a source line and a primary/secondary confidence label at the top, per
+Article 6 of [specs/constitution.md](specs/constitution.md).
 
 ## What you get
 

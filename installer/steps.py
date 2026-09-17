@@ -56,11 +56,18 @@ def step_50_render(cfg, out_dir: Path) -> dict:
     return {"step": "render", "ok": True, "out": str(out_dir)}
 
 
-def step_60_demo() -> dict:
-    """Stand up the fictional John Doe persona fully offline."""
+DEMO_SAMPLE_QUESTIONS = {
+    "john_doe": "How should I think about unit economics and burn?",
+    "marcus_aurelius": "What is the best kind of revenge?",
+}
+
+
+def step_60_demo(demo_slug: str = "john_doe") -> dict:
+    """Stand up a bundled offline persona (fictional john_doe, or the public-domain
+    marcus_aurelius exception under specs/constitution.md Article 1) fully offline."""
     from config import load_config
     from brain import get_brain
-    demo_dir = ROOT / "demo" / "john_doe"
+    demo_dir = ROOT / "demo" / demo_slug
     cfg = load_config(demo_dir / "persona.yaml")
     brain = get_brain(cfg)            # inmemory
     brain.init()
@@ -68,8 +75,9 @@ def step_60_demo() -> dict:
     out_dir = ROOT / "work" / cfg.persona.slug / "rendered"
     render = step_50_render(cfg, out_dir)
     # a grounded "answer" without any LLM: show the top brain hit for a demo question
-    q = "How should I think about unit economics and burn?"
+    q = DEMO_SAMPLE_QUESTIONS.get(demo_slug, "What do you teach?")
     hits = brain.search(q, k=1)
     grounded = hits[0].text.splitlines()[0] if hits else "(no hit)"
-    return {"step": "demo", "ok": True, "mined": mined, "rendered": render["out"],
-            "sample_q": q, "grounded_top": grounded, "backend": brain.status()["backend"]}
+    return {"step": "demo", "ok": True, "persona_name": cfg.persona.name, "mined": mined,
+            "rendered": render["out"], "sample_q": q, "grounded_top": grounded,
+            "backend": brain.status()["backend"]}

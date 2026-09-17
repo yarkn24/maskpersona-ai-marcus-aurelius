@@ -3,18 +3,19 @@
 
 PY ?= python3
 
-.PHONY: help install new demo demo-visual ingest eval audit verify clean
+.PHONY: help install new demo demo-marcus demo-visual ingest eval audit verify clean
 
 help:
-	@echo "MaskPersona AI"
-	@echo "  make install   deterministic setup (deps only; no account or access token)"
-	@echo "  make new       create a new persona (you give a name)"
-	@echo "  make demo      run the fictional John Doe demo offline (no downloads)"
+	@echo "MaskPersona AI: Marcus Aurelius Edition"
+	@echo "  make install     deterministic setup (deps only; no account or access token)"
+	@echo "  make demo-marcus run the Marcus Aurelius persona offline (no downloads; start here)"
+	@echo "  make demo        run the fictional John Doe demo offline (upstream parity)"
+	@echo "  make new         create a different persona (you give a name)"
 	@echo "  make demo-visual [NAME=... IMAGE=photo.jpg]   animated terminal face demo"
-	@echo "  make ingest    run/resume the ingestion pipeline for the current persona"
-	@echo "  make eval      generate domain-adapted questions and score the persona"
-	@echo "  make audit     run genericity + GDPR + legal + text-classifier audits"
-	@echo "  make verify    run the test suite"
+	@echo "  make ingest      run/resume the ingestion pipeline for the current persona"
+	@echo "  make eval        generate domain-adapted questions and score the persona"
+	@echo "  make audit       run genericity + GDPR + legal + text-classifier audits"
+	@echo "  make verify      run the test suite"
 
 install:
 	$(PY) -m installer.bootstrap
@@ -24,6 +25,9 @@ new:
 
 demo:
 	$(PY) -m installer.bootstrap --demo
+
+demo-marcus:
+	$(PY) -m installer.bootstrap --demo --demo-name marcus_aurelius
 
 demo-visual:
 	pip install "rich>=13,<15" -q

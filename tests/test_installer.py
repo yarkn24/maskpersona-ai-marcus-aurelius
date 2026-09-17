@@ -28,6 +28,21 @@ def test_demo_stands_up_offline():
     assert "{{" not in txt and "John Doe" in txt
 
 
+def test_demo_marcus_stands_up_offline():
+    d = step_60_demo(demo_slug="marcus_aurelius")
+    assert d["ok"] is True
+    assert d["persona_name"] == "Marcus Aurelius"
+    assert d["backend"] == "inmemory"
+    assert d["mined"] >= 3
+    assert "revenge" in d["grounded_top"].lower()  # right aphorism for the revenge question
+    rendered = Path(d["rendered"])
+    assert rendered.exists()
+    agent = rendered / "marcus-aurelius.agent.md"
+    assert agent.exists()
+    txt = agent.read_text(encoding="utf-8")
+    assert "{{" not in txt and "Marcus Aurelius" in txt
+
+
 def test_parts_lock_valid():
     lock = json.loads((ROOT / "installer" / "lock" / "parts.lock.json").read_text())
     assert lock["version"] == 1

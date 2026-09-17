@@ -59,10 +59,15 @@ tests) before starting the next phase. Do not skip gates.
 
 ## 4. Hard prohibitions (echoing the constitution)
 
-- No real person's name/bio/quote/path/transcript/audio in the repo. Example identity is **John Doe** only.
+- No real person's name/bio/quote/path/transcript/audio in the repo, except the Article 1 exception:
+  a named, long-deceased (70+ years) public-domain historical figure with every source file license-
+  and source-cited. Example identities are **John Doe** (fictional) and **Marcus Aurelius** (real,
+  public-domain, exception-approved) only.
 - No absolute machine paths; resolve from home + repo-relative + config.
-- No third-party verbatim text and no company/product names copied in.
-- No bundled or redistributed copyrighted content; persona content lives only under git-ignored `work/`.
+- No third-party verbatim text and no company/product names copied in, except licensed public-domain
+  primary-source text under the Article 1 exception.
+- No bundled or redistributed copyrighted content; persona content otherwise lives only under
+  git-ignored `work/`.
 - The persona runtime never fabricates quotes/numbers/events and always carries its unendorsed-persona disclaimer.
 
 ## 5. Definition of done
