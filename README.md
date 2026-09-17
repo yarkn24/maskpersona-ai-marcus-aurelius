@@ -1,8 +1,7 @@
 # MaskPersona AI: Marcus Aurelius Edition
 
 <p align="center">
-  <img src="assets/hero-mask-choice.png" alt="A figure considering which mask to wear" width="49%" />
-  <img src="assets/hero-persona-scan.png" alt="Close-up biometric persona scan" width="49%" />
+  <img src="assets/hero-marcus-aurelius.jpeg" alt="Marcus Aurelius writing the Meditations, with a quote: The impediment to action advances action. What stands in the way becomes the way." width="80%" />
 </p>
 
 Build a grounded, evidence-based **persona advisor bot** of any **public figure**, from their public
