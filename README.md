@@ -4,31 +4,22 @@
   <img src="assets/hero-marcus-aurelius.jpeg" alt="Marcus Aurelius writing the Meditations, with a quote: The impediment to action advances action. What stands in the way becomes the way." width="80%" />
 </p>
 
-Build a grounded, evidence-based **persona advisor bot** of any **public figure**, from their public
-content, with one command. You give a name; MaskPersona AI discovers their public talks and articles,
-isolates their voice, builds an isolated knowledge brain, and renders a Claude Code agent that answers
-in their voice, with citation discipline and strict anti-fabrication.
-
-> **Read first:** MaskPersona AI only works with **public figures** and their **public content**. It
-> refuses private individuals. Every bot it produces is an **unendorsed persona interpretation** of
-> public material, not the real person's approved opinion, and not legal/financial/medical advice. It
-> does **not** synthesize or clone voices. Prohibited: deception, impersonation for fraud, political
-> disinformation, harassment, and non-consensual commercial use of a person's voice/likeness.
-> See [DISCLAIMER.md](DISCLAIMER.md) and [ACCEPTABLE_USE.md](ACCEPTABLE_USE.md).
+## What's in the Marcus Edition
 
 This is a pre-configured build for a Stoic-philosophy persona: instead of typing a name during
 onboarding, you talk to a Claude Code agent already grounded in Marcus Aurelius's own public-domain
-writing (*Meditations*) plus cited biographical and philosophical sources. It exists under the narrow
-exception in [specs/constitution.md](specs/constitution.md) Article 1 for long-deceased (70+ years),
-public-domain historical figures with no living rights-holders. The generic upstream framework
-(pick any public figure by name) is everything below; the upstream project itself lives at
+writing (*Meditations*) plus cited biographical and philosophical sources, no setup beyond one
+command. It exists under the narrow exception in [specs/constitution.md](specs/constitution.md)
+Article 1 for long-deceased (70+ years), public-domain historical figures with no living
+rights-holders. The generic upstream framework (pick any public figure by name) is everything
+below; the upstream project itself lives at
 [github.com/yarkn24/maskpersona-ai](https://github.com/yarkn24/maskpersona-ai).
 
-**Read before you run anything.** The output is an **unendorsed persona interpretation**: an agent
-reasoning in Marcus Aurelius's style, grounded in his public writing. It is not the real Marcus
-Aurelius, not a resurrection or channeling of him, and no living person endorses or reviews it (he
-died in 180 AD). See [DISCLAIMER.md](DISCLAIMER.md) for the full standing disclaimer every answer
-carries, and [ACCEPTABLE_USE.md](ACCEPTABLE_USE.md) for prohibited uses.
+> **Read first:** the output is an **unendorsed persona interpretation**: an agent reasoning in
+> Marcus Aurelius's style, grounded in his public writing. It is not the real Marcus Aurelius, not
+> a resurrection or channeling of him, and no living person endorses or reviews it (he died in 180
+> AD). Not legal/financial/medical advice. See [DISCLAIMER.md](DISCLAIMER.md) for the full standing
+> disclaimer every answer carries, and [ACCEPTABLE_USE.md](ACCEPTABLE_USE.md) for prohibited uses.
 
 ### Quick start: talk to Marcus Aurelius
 
