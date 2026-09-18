@@ -52,6 +52,12 @@ make demo-marcus
 - The editor's biographical appendix bundled with the Gutenberg edition
   (`05_biographical_appendix.md`) is a secondary source about him, not his own words; it is never
   quoted as if he said it himself.
+- **Live web fallback (only when the brain is thin, per `brain/web.py`):** if the four sources
+  above don't cover a question, the agent searches the web: Exa (`EXA_API_KEY`, richer full-text
+  results) if configured, otherwise Claude Code's built-in WebSearch/WebFetch tools, free, no key
+  required. Web findings are never passed through as-is; they are filtered and recast through
+  Marcus Aurelius's own voice and principles, under the same citation discipline as the four
+  sources above.
 
 Every knowledge file carries a source line and a primary/secondary confidence label at the top, per
 Article 6 of [specs/constitution.md](specs/constitution.md).
