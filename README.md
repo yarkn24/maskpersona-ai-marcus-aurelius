@@ -1,7 +1,7 @@
 # MaskPersona AI: Marcus Aurelius Edition
 
 <p align="center">
-  <img src="assets/hero-marcus-aurelius.jpeg" alt="Marcus Aurelius writing the Meditations, with a quote: The impediment to action advances action. What stands in the way becomes the way." width="80%" />
+  <img src="assets/hero-marcus-aurelius.jpeg" alt="MaskPersona AI: Marcus Aurelius Edition title card, with Roman-empire illustration bands depicting daily life, the Senate, the military, and Marcus Aurelius writing the Meditations at his desk." width="80%" />
 </p>
 
 ## What's in the Marcus Edition
@@ -60,31 +60,43 @@ Article 6 of [specs/constitution.md](specs/constitution.md).
 
 `make eval PERSONA=demo/marcus_aurelius/persona.yaml` on its own only scores a placeholder string
 (no real model call; see `eval/run_eval.py`'s printed warning), the same known gap the upstream
-README documents for John Doe. Measured 2026-09-17 with the real persona agent instead (rendered
-`templates/persona-agent.md.j2` system prompt against the real knowledge base, one question per
-rubric category, judged against `eval/RUBRIC.md`'s 5 dimensions by an independent model):
+README documents for John Doe (dry-run also reconfirmed 2026-09-18: `eval: 14 questions, traced
+via local`). Measured 2026-09-18 with the real persona agent instead (rendered
+`templates/persona-agent.md.j2` system prompt, with the persona doing its own agentic
+grep/Read retrieval over the real `demo/marcus_aurelius/knowledge_src/` files rather than being
+handed pre-selected excerpts, one question per rubric category, judged against
+`eval/RUBRIC.md`'s 5 dimensions by an independent model):
 
 | category | partisanship | persona_fidelity | no_fabrication | flexibility | brain_grounded | all 5 pass |
 |---|---|---|---|---|---|---|
-| advice | 0.95 | 0.95 | 0.95 | 0.85 | 0.92 | yes |
-| decision | 0.90 | 0.95 | 0.95 | 0.85 | 0.95 | yes |
-| thesis | 1.00 | 0.98 | 1.00 | 0.85 | 1.00 | yes |
-| strategy | 0.92 | 0.98 | 0.95 | 0.87 | 0.97 | yes |
-| flexibility | 0.90 | 0.95 | 0.90 | 0.90 | 0.90 | yes |
-| fabrication_trap | 0.90 | 0.95 | 1.00 | 0.75 | 1.00 | no |
-| stance_bait | 1.00 | 1.00 | 1.00 | 0.80 | 1.00 | yes |
+| advice | 0.90 | 0.92 | 0.90 | 0.55 | 0.95 | no |
+| decision | 0.85 | 0.90 | 0.75 | 0.60 | 0.85 | no |
+| thesis | 0.90 | 0.93 | 0.85 | 0.55 | 0.90 | no |
+| strategy | 0.90 | 0.85 | 0.85 | 0.80 | 0.90 | yes |
+| flexibility | 0.90 | 0.94 | 0.92 | 0.88 | 0.93 | yes |
+| fabrication_trap | 0.90 | 0.92 | 0.95 | 0.85 | 0.95 | yes |
+| stance_bait | 0.97 | 0.95 | 0.90 | 0.85 | 0.95 | yes |
 
-All-5-pass rate: 6/7 (86%). The one miss (fabrication_trap) failed only on flexibility at 0.75
-against the 0.8 bar; that category weights `no_fabrication` (1.00: it refused to invent a number
-and gave only the one real, cited figure) and does not itself test counterargument defense.
+All-5-pass rate: 4/7 (57%). Every miss failed on flexibility alone (all other dimensions cleared
+their threshold on all 7 answers), and the misses split cleanly by category: the three
+guidance-style categories (advice, decision, thesis) scored 0.55-0.60 against the 0.8 bar, while
+strategy, the dedicated flexibility category, fabrication_trap, and stance_bait all cleared it
+(0.80-0.88). A request for guidance does not itself stage a counterargument to defend or update
+on, so it is structurally unlikely to score high on this dimension regardless of answer quality.
+The fabrication_trap question specifically asked for a dated, word-for-word quote; the persona
+confirmed by grep sweep that the Meditations carry no internal dates and refused to invent one,
+still answering the underlying question (impermanence and mortality) with two real, grounded
+quotes.
 
 **Reproduce:** the 7 persona answers and 7 judged scores above were produced by dispatching the
 actual rendered agent (`work/marcus-aurelius/rendered/marcus-aurelius.agent.md` after `make
-demo-marcus`) against `eval.gen_questions.generate()`'s real question set, then scoring each with
+demo-marcus`) against `eval.gen_questions.generate()`'s real question set, having the dispatch
+search `demo/marcus_aurelius/knowledge_src/` itself for grounding passages, then scoring each with
 `eval/judge.py::build_judge_prompt()`'s rubric via an independent model call, no API key required
 inside a Claude Code session (or `ANTHROPIC_API_KEY` outside one). No single wired script exists
 for this yet (same gap noted in the upstream README); reproducing it means dispatching those two
-calls per question yourself.
+calls per question yourself. Trace (local only, `work/` is gitignored, not shipped in the repo):
+`work/marcus-aurelius/traces/personaforge-marcus-aurelius-manual-sample-2026-09-18.jsonl`.
 
 ## What you get
 
@@ -144,10 +156,11 @@ Default question count is 100 (`config/defaults.yaml`); the shipped fictional de
 (`demo/john_doe/persona.yaml`) configures 20, which the generator turns into 14 (2 per category,
 integer division across 7 categories).
 
-**Measured 2026-09-07, in this repo, no ANTHROPIC_API_KEY or network access used:**
+**Measured 2026-09-18, in this repo, no ANTHROPIC_API_KEY or network access used:**
 
 1. Test suite (deterministic, 0 model calls):
-   `python -m pytest -q` -> 72 passed, 0 failed.
+   `python -m pytest -q` -> 73 passed, 0 failed (one more than the upstream repo's 72: this repo
+   carries an extra test, `test_demo_marcus_stands_up_offline`).
    `python -m pytest tests/test_eval.py tests/test_auditor.py -v` -> 9 passed, 0 failed.
 2. Harness dry-run (0 model calls, proves the CLI runs end to end, not a quality measurement):
    `python -m eval.run_eval --persona demo/john_doe/persona.yaml` -> `eval: 14 questions, traced
@@ -155,34 +168,42 @@ integer division across 7 categories).
    a keyword heuristic that `eval/judge.py` itself documents as "not authoritative"; it exercises
    the plumbing, it does not measure persona answer quality.
 3. Quality sample (n=7, one question per category, the smallest subset covering every rubric
-   dimension): answers came from a real Opus dispatch running the actual rendered
-   `templates/persona-agent.md.j2` system prompt against the demo's real 3-file knowledge base
-   (`demo/john_doe/knowledge_src/`); scores came from a Sonnet judge applying the rubric above, run
-   inside a Claude Code session (no paid API calls, no downloads). Trace:
-   `work/john-doe/traces/personaforge-john-doe-manual-sample-2026-09-07-*.jsonl`.
+   dimension): this sample was produced against `eval/`, `templates/`, `config/`, and
+   `demo/john_doe/`, which are byte-identical to the upstream repo's, so the same run backs the
+   identical table in the upstream README rather than being reproduced twice. Answers came from a
+   real Opus dispatch (one question ran on Sonnet due to a live Opus concurrency cap) running the
+   actual rendered `templates/persona-agent.md.j2` system prompt against the demo's real 3-file
+   knowledge base (`demo/john_doe/knowledge_src/`); scores came from independent Sonnet judge
+   dispatches applying the rubric above, run inside a Claude Code session (no paid API calls, no
+   downloads). Trace (local only, `work/` is gitignored, not shipped in the repo):
+   `work/john-doe/traces/personaforge-john-doe-manual-sample-2026-09-18.jsonl`.
 
    | category | partisanship | persona_fidelity | no_fabrication | flexibility | brain_grounded | all 5 pass |
    |---|---|---|---|---|---|---|
-   | advice | 0.8 | 0.8 | 1.0 | 0.6 | 1.0 | no |
-   | decision | 0.6 | 0.8 | 1.0 | 0.6 | 0.8 | no |
-   | thesis | 0.8 | 0.8 | 1.0 | 0.6 | 1.0 | no |
-   | strategy | 0.8 | 0.8 | 1.0 | 0.6 | 1.0 | no |
-   | flexibility | 0.8 | 0.8 | 1.0 | 0.8 | 0.8 | yes |
-   | fabrication_trap | 0.6 | 0.6 | 1.0 | 0.6 | 1.0 | no |
-   | stance_bait | 1.0 | 0.8 | 1.0 | 0.6 | 0.8 | no |
+   | advice | 0.90 | 0.85 | 0.85 | 0.60 | 0.95 | no |
+   | decision | 0.90 | 0.92 | 0.60 | 0.85 | 0.85 | yes |
+   | thesis | 0.90 | 0.90 | 0.85 | 0.85 | 0.55 | no |
+   | strategy | 0.85 | 0.80 | 0.75 | 0.75 | 0.90 | no |
+   | flexibility | 0.95 | 0.92 | 0.95 | 0.90 | 0.95 | yes |
+   | fabrication_trap | 0.85 | 0.92 | 0.98 | 0.40 | 0.95 | no |
+   | stance_bait | 0.97 | 0.90 | 0.95 | 0.75 | 0.97 | no |
 
-   All-5-dimensions-pass rate: 1/7 (14%). Per-dimension pass rate against its own threshold:
-   partisanship, persona_fidelity, no_fabrication, brain_grounded all 7/7 (100% at >= 0.6);
-   flexibility 1/7 (14% at >= 0.8). Zero fabricated quotes or numbers across all 7 answers,
-   including the fabrication_trap question (the brain has no content on the asked topic; the
-   persona said so and refused to invent numbers instead of answering).
+   All-5-dimensions-pass rate: 2/7 (29%). Per-dimension pass rate against its own threshold:
+   partisanship, persona_fidelity, no_fabrication all 7/7 (100% at >= 0.6); brain_grounded 6/7
+   (86% at >= 0.6, thesis is the one miss at 0.55); flexibility 3/7 (43% at >= 0.8).
 
-   Failure category (the only one observed): the flexibility dimension's 0.8 threshold is set on
-   every question regardless of category, but only the question actually built to present a
-   counterargument (the "flexibility" category) gives the model something concrete to defend and
-   then update on. The other 6 answers show no hedging and no fabrication; they score at the 0.6
-   floor on flexibility because nothing in the question tested it, not because the answer folded or
-   refused to update.
+   Two failure patterns this run, both explainable rather than a quality regression. (1)
+   Flexibility, at its fixed 0.8 threshold, only reliably clears on a question actually built to
+   present a counterargument: decision and the dedicated flexibility category cleared it (0.85,
+   0.90), but advice, strategy, fabrication_trap, and stance_bait scored 0.40-0.75 because nothing
+   in those prompts gave the persona a concrete objection to defend or update on, not because the
+   answers hedged or folded. (2) thesis is the one answer marked down on brain_grounded (0.55): it
+   leaned more heavily on synthesized framework (the must-have/nice-to-have split itself) than on
+   literal brain content, and while every synthesized part was flagged as AI-generated in the
+   attribution block, the judge scored the overall grounding lower for it. Zero fabricated quotes
+   or numbers across all 7 answers, including the fabrication_trap question (the brain has no
+   founder-market-fit content; the persona said so and refused to invent a figure instead of
+   confabulating one).
 
 **Reproduce:** steps 1 and 2 above are exact, scripted commands, runnable with no API key. Step 3
 has no single wired script yet (see gaps below); reproducing it means dispatching the same two
